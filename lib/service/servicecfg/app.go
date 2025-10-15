@@ -251,6 +251,9 @@ func (a *App) checkPorts() error {
 type AppAWS struct {
 	// ExternalID is the AWS External ID used when assuming roles in this app.
 	ExternalID string
+
+	// SessionTags are the AWS session tags to apply to the session.
+	SessionTags map[string]string
 }
 
 // Rewrite is a list of rewriting rules to apply to requests and responses.

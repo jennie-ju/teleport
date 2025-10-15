@@ -60,6 +60,8 @@ type AWSSigninRequest struct {
 	Issuer string
 	// ExternalID is the AWS external ID.
 	ExternalID string
+	// SessionTags is session tags
+	SessionTags map[string]string
 	// Integration is the Integration name to use to generate credentials.
 	// If empty, it will use ambient credentials
 	Integration string
@@ -307,6 +309,7 @@ func getAssumeDetailedRolesOption(ctx context.Context, req *AWSSigninRequest, te
 	assumeRole := awsconfig.AssumeRole{
 		RoleARN:    req.Identity.RouteToApp.AWSRoleARN,
 		ExternalID: req.ExternalID,
+		Tags:       req.SessionTags,
 		// Setting role session name to Teleport username will allow to
 		// associate CloudTrail events with the Teleport user.
 		SessionName: req.Identity.Username,

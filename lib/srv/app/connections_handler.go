@@ -485,6 +485,7 @@ func (c *ConnectionsHandler) serveAWSWebConsole(w http.ResponseWriter, r *http.R
 		TargetURL:   app.GetURI(),
 		Issuer:      app.GetPublicAddr(),
 		ExternalID:  app.GetAWSExternalID(),
+		SessionTags: app.GetAWSSessionTags(),
 		Integration: app.GetIntegration(),
 		RolesAnywhereMetadata: awsconfig.RolesAnywhereMetadata{
 			ProfileARN:                    app.GetAWSRolesAnywhereProfileARN(),

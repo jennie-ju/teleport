@@ -1218,6 +1218,8 @@ message AppAWS {
   // RolesAnywhereProfile contains the IAM Roles Anywhere fields associated with this Application.
   // These fields are set when performing the synchronization of AWS IAM Roles Anywhere Profiles into Teleport Apps.
   AppAWSRolesAnywhereProfile RolesAnywhereProfile = 2 [(gogoproto.jsontag) = "roles_anywhere_profile,omitempty"];
+  // Session tags
+  map<string, string> SessionTags = 3 [(gogoproto.jsontag) = "session_tags,omitempty"];
 }
 
 // AppAWSRolesAnywhereProfile contains the fields that represent an AWS IAM Roles Anywhere Profile.

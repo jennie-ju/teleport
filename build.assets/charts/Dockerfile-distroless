@@ -1,11 +1,11 @@
 ARG BASE_IMAGE=gcr.io/distroless/cc-debian12
 
-FROM debian:12 AS staging
+FROM debian:12  AS staging
 RUN apt-get update
 COPY fetch-debs ./
 RUN ./fetch-debs dumb-init libpam0g libaudit1 libcap-ng0
 
-FROM debian:12 AS teleport
+FROM debian:12 AS teleport-stage
 # Install the teleport binary from an architecture-specific debian package. Note
 # that we cannot simply pass a ready-made package filename in as a build-arg, as
 # this dockerfile is used for a multiarch build and any build-args will be
@@ -30,9 +30,10 @@ RUN dpkg-deb -R $TELEPORT_DEB_FILE_NAME /opt/staging && \
     rm -rf /opt/staging/DEBIAN
 
 FROM $BASE_IMAGE
-COPY --from=teleport /opt/staging /
+COPY --from=teleport-stage /opt/staging /
 COPY --from=staging /opt/staging/root /
 COPY --from=staging /opt/staging/status /var/lib/dpkg/status.d
+COPY --chmod=0755 teleport /usr/local/bin/
 ENV TELEPORT_TOOLS_VERSION=off
 # Attempt a graceful shutdown by default
 # See https://goteleport.com/docs/reference/signals/ for signal reference.

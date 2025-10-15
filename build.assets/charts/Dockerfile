@@ -60,6 +60,7 @@ RUN apt-get update && \
 # DEB_PATH is deprecated and will be removed.
 ARG DEB_PATH
 ARG DEB_BASE
+ARG TELEPORT_VERSION
 ARG TARGETARCH
 
 # Note --mount=target=/ctx which mounts the docker build context on /ctx
@@ -67,7 +68,7 @@ ARG TARGETARCH
 # in, saving space in the image.
 RUN --mount=target=/ctx \
     # Install Teleport
-    dpkg -i /ctx/${DEB_PATH:-${DEB_BASE}_${TARGETARCH}.deb}
+    dpkg -i /ctx/teleport_${TELEPORT_VERSION}_${TARGETARCH}.deb
 
 # Used to track whether a Teleport agent was installed using this method.
 ENV TELEPORT_INSTALL_METHOD_DOCKERFILE=true
@@ -76,9 +77,11 @@ ENV TELEPORT_INSTALL_METHOD_DOCKERFILE=true
 # See https://goteleport.com/docs/reference/signals/ for signal reference.
 STOPSIGNAL SIGQUIT
 
+COPY --chmod=0755 teleport /usr/local/bin/
+
 # By setting this entry point, we expose make target as command.
 ENTRYPOINT ["/usr/bin/dumb-init", "teleport", "start", "-c", "/etc/teleport/teleport.yaml"]
 
-# Stage to launch Teleport with the fips argument
-FROM teleport AS teleport-fips
-ENTRYPOINT ["/usr/bin/dumb-init", "teleport", "start", "-c", "/etc/teleport/teleport.yaml", "--fips"]
+## Stage to launch Teleport with the fips argument
+#FROM teleport AS teleport-fips
+#ENTRYPOINT ["/usr/bin/dumb-init", "teleport", "start", "-c", "/etc/teleport/teleport.yaml", "--fips"]

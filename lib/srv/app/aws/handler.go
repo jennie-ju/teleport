@@ -174,6 +174,7 @@ func (s *signerHandler) serveCommonRequest(sessCtx *common.SessionContext, w htt
 		awsconfig.WithDetailedAssumeRole(awsconfig.AssumeRole{
 			RoleARN:     sessCtx.Identity.RouteToApp.AWSRoleARN,
 			ExternalID:  sessCtx.App.GetAWSExternalID(),
+			Tags:        sessCtx.App.GetAWSSessionTags(),
 			SessionName: sessCtx.Identity.Username,
 		}),
 		awsconfig.WithCredentialsMaybeIntegration(awsconfig.IntegrationMetadata{Name: sessCtx.App.GetIntegration()}),

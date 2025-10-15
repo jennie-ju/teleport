@@ -6365,7 +6365,8 @@ func (process *TeleportProcess) initApps() {
 			var aws *types.AppAWS
 			if app.AWS != nil {
 				aws = &types.AppAWS{
-					ExternalID: app.AWS.ExternalID,
+					ExternalID:  app.AWS.ExternalID,
+					SessionTags: app.AWS.SessionTags,
 				}
 			}
 

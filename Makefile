@@ -154,15 +154,15 @@ endif
 endif
 
 # Do not build RDP client on 32-bit ARM or 386, or for FIPS builds on arm64.
-ifneq ("$(ARCH)","arm")
-ifneq ("$(ARCH)","386")
-ifneq ("$(is_fips_on_arm64)","yes")
-with_rdpclient := yes
-RDPCLIENT_MESSAGE := with-Windows-RDP-client
-RDPCLIENT_TAG := desktop_access_rdp
-endif
-endif
-endif
+#ifneq ("$(ARCH)","arm")
+#ifneq ("$(ARCH)","386")
+#ifneq ("$(is_fips_on_arm64)","yes")
+#with_rdpclient := yes
+#RDPCLIENT_MESSAGE := with-Windows-RDP-client
+#RDPCLIENT_TAG := desktop_access_rdp
+#endif
+#endif
+#endif
 
 endif
 endif
@@ -388,7 +388,7 @@ $(BUILDDIR)/tctl:
 
 .PHONY: $(BUILDDIR)/teleport
 $(BUILDDIR)/teleport: ensure-webassets bpf-bytecode rdpclient
-	GOOS=$(OS) GOARCH=$(ARCH) $(CGOFLAG) go build -tags "webassets_embed $(PAM_TAG) $(FIPS_TAG) $(BPF_TAG) $(WEBASSETS_TAG) $(RDPCLIENT_TAG) $(PIV_BUILD_TAG) $(KUSTOMIZE_NO_DYNAMIC_PLUGIN)" -o $(BUILDDIR)/teleport $(BUILDFLAGS) $(TELEPORT_LDFLAGS) ./tool/teleport
+	GOOS=$(OS) GOARCH=$(ARCH) $(CGOFLAG) CGO_CFLAGS="-fPIC" go build -tags "webassets_embed $(PAM_TAG) $(FIPS_TAG) $(BPF_TAG) $(WEBASSETS_TAG) $(RDPCLIENT_TAG) $(PIV_BUILD_TAG) $(KUSTOMIZE_NO_DYNAMIC_PLUGIN)" -o $(BUILDDIR)/teleport $(BUILDFLAGS) $(TELEPORT_LDFLAGS) ./tool/teleport
 
 # NOTE: Any changes to the `tsh` build here must be copied to `build.assets/windows/build.ps1`
 # until we can use this Makefile for native Windows builds.

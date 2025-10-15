@@ -38,18 +38,18 @@ LIBBPF_VER := 1.2.2
 
 FOUND_LIBBPF :=
 
-ifneq (,$(wildcard /usr/libbpf-$(LIBBPF_VER)))
-FOUND_LIBBPF := true
-LIBBPF_INCLUDES := -I/usr/libbpf-$(LIBBPF_VER)/include
-LIBBPF_LIBS := -L/usr/libbpf-$(LIBBPF_VER)/lib64 -lbpf
-# libbpf needs libelf. Try to find it with pkg-config/pkgconf and fallback to
-# hard-coded defaults if pkg-config says nothing.
-LIBBPF_LIBS += $(or $(shell $(PKGCONF) --silence-errors --static --libs libelf),-lelf -lz)
-else ifneq (,$(shell $(PKGCONF) --exists 'libbpf = $(LIBBPF_VER)' && echo true))
-FOUND_LIBBPF := true
-LIBBPF_INCLUDES := $(shell $(PKGCONF) --cflags libbpf)
-LIBBPF_LIBS := $(shell $(PKGCONF) --libs --static libbpf)
-endif
+#ifneq (,$(wildcard /usr/libbpf-$(LIBBPF_VER)))
+#FOUND_LIBBPF := true
+#LIBBPF_INCLUDES := -I/usr/libbpf-$(LIBBPF_VER)/include
+#LIBBPF_LIBS := -L/usr/libbpf-$(LIBBPF_VER)/lib64 -lbpf
+## libbpf needs libelf. Try to find it with pkg-config/pkgconf and fallback to
+## hard-coded defaults if pkg-config says nothing.
+#LIBBPF_LIBS += $(or $(shell $(PKGCONF) --silence-errors --static --libs libelf),-lelf -lz)
+#else ifneq (,$(shell $(PKGCONF) --exists 'libbpf = $(LIBBPF_VER)' && echo true))
+#FOUND_LIBBPF := true
+#LIBBPF_INCLUDES := $(shell $(PKGCONF) --cflags libbpf)
+#LIBBPF_LIBS := $(shell $(PKGCONF) --libs --static libbpf)
+#endif
 
 # Is this build targeting the same OS & architecture it is being compiled on, or
 # will it require cross-compilation? We need to know this (especially for ARM) so we
@@ -92,7 +92,7 @@ CLANG_BPF_SYS_INCLUDES = $(shell $(CLANG) -v -E - </dev/null 2>&1 \
 # Link static version of libraries required by Teleport (bpf, pcsc) to reduce
 # system dependencies. Avoid dependencies on dynamic libraries if we already
 # link the static version using --as-needed.
-CGOFLAG = CGO_ENABLED=1 CGO_CFLAGS="$(BPF_INCLUDES)" CGO_LDFLAGS="-Wl,-Bstatic $(STATIC_LIBS) -Wl,-Bdynamic -Wl,--as-needed"
+CGOFLAG = CGO_ENABLED=1 CGO_CFLAGS="$(BPF_INCLUDES)-fPIC" CGO_LDFLAGS="-Wl,-Bstatic $(STATIC_LIBS) -Wl,-Bdynamic -Wl,--as-needed"
 CGOFLAG_TSH = CGO_ENABLED=1 CGO_LDFLAGS="-Wl,-Bstatic $(STATIC_LIBS_TSH) -Wl,-Bdynamic -Wl,--as-needed"
 
 endif # IS_NATIVE_BUILD || IS_CROSS_COMPILE_BB

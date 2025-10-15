@@ -2241,6 +2241,9 @@ type Rewrite struct {
 type AppAWS struct {
 	// ExternalID is the AWS External ID used when assuming roles in this app.
 	ExternalID string `yaml:"external_id,omitempty"`
+
+	// SessionTags is a list of AWS STS session tags.
+	SessionTags map[string]string `yaml:"session_tags,omitempty"`
 }
 
 // PortRange describes a port range for TCP apps. The range starts with Port and ends with EndPort.

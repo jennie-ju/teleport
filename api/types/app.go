@@ -79,6 +79,8 @@ type Application interface {
 	GetAWSAccountID() string
 	// GetAWSExternalID returns the AWS External ID configured for this app.
 	GetAWSExternalID() string
+	// GetAWSSessionTags returns the session tags configured for this app.
+	GetAWSSessionTags() map[string]string
 	// GetAWSRolesAnywhereProfileARN returns the AWS IAM Roles Anywhere Profile ARN which originated this App.
 	GetAWSRolesAnywhereProfileARN() string
 	// GetAWSRolesAnywhereAcceptRoleSessionName returns whether the IAM Roles Anywhere Profile supports defining a custom AWS Session Name.
@@ -327,6 +329,14 @@ func (a *AppV3) GetAWSExternalID() string {
 		return ""
 	}
 	return a.Spec.AWS.ExternalID
+}
+
+// GetAWSSessionTags returns the session tags configured for this app.
+func (a *AppV3) GetAWSSessionTags() map[string]string {
+	if a.Spec.AWS == nil {
+		return make(map[string]string)
+	}
+	return a.Spec.AWS.SessionTags
 }
 
 // GetAWSRolesAnywhereProfileARN returns the AWS IAM Roles Anywhere Profile ARN which originated this App.
